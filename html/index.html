@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录页面</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100" x-data="loginManager()">
+    <!-- New header bar -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <svg class="h-8 w-8 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <h1 class="text-xl font-bold">Your App Title</h1>
+            </div>
+            <button 
+                x-show="hasToken" 
+                @click="logout" 
+                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                x-cloak>
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <div class="min-h-screen flex items-center justify-center" id="login" x-show="!hasToken" x-cloak>
+        <div class="bg-white p-8 rounded-lg shadow-md w-96">
+            <h2 class="text-2xl font-bold mb-6 text-center">登录</h2>
+            <form id="loginForm" class="space-y-4" @submit.prevent="login">
+                <div>
+                    <label for="nickname" class="block mb-1">昵称</label>
+                    <input type="text" id="nickname" x-model="nickname" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <div>
+                    <label for="password" class="block mb-1">密码</label>
+                    <input type="password" id="password" x-model="password" class="w-full px-3 py-2 border rounded-md" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">登录</button>
+            </form>
+        </div>
+    </div>
+    <div class="min-h-screen flex items-center justify-center" id="home" x-show="hasToken" x-cloak>
+        <div class="text-center">
+            <h1 class="text-4xl font-bold text-blue-600 mb-4">Hello</h1>
+            <p class="text-xl text-gray-700">Welcome to our home page!</p>
+        </div>
+    </div>
+
+    <script>
+        function loginManager() {
+            return {
+                hasToken: false,
+                nickname: '',
+                password: '',
+                init() {
+                    this.hasToken = !!localStorage.getItem('token');
+                },
+                async login() {
+                    try {
+                        const response = await axios.post('/auth/login', { 
+                            nickname: this.nickname, 
+                            password: this.password 
+                        });
+                        // 登录成功
+                        const { token } = response.data;
+                        localStorage.setItem('token', token);
+                        this.hasToken = true;
+                    } catch (error) {
+                        let errorMessage = '登录失败，请稍后重试。';
+                        if (error.response && error.response.data) {
+                            // 服务器响应了错误状态码
+                            errorMessage = '登录失败:'+error.response.data.error;
+                        }
+                        alert(errorMessage);
+                    }
+                },
+                logout() {
+                    localStorage.removeItem('token');
+                    this.hasToken = false;
+                }
+            }
+        }
+
+        // document.addEventListener('DOMContentLoaded', async () => {
+            // 检查是否已有token
+            // const token = localStorage.getItem('token');
+            // if (token) {
+                // try {
+                    // 验证token是否有效
+                    // const response = await axios.get('/api/status', {
+                    //     headers: { 'Authorization': `Bearer ${token}` }
+                    // });
+                    // if (response.data.status === 'valid') {
+                        // window.location.href = '/home';
+                //         return;
+                //     }
+                // } catch (error) {
+                //     console.error('Token验证失败:', error);
+                // }
+            // }
+
+            // 处理登录表单提交
+        //     document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        //         e.preventDefault();
+        //         const nickname = document.getElementById('nickname').value;
+        //         const password = document.getElementById('password').value;
+
+        //         try {
+        //             const response = await axios.post('/auth/login', { nickname, password });
+        //             const { token } = response.data;
+        //             localStorage.setItem('token', token);
+        //             window.location.href = '/home';
+        //         } catch (error) {
+        //             console.error('登录失败:', error);
+        //             alert('登录失败，请检查您的昵称和密码。');
+        //         }
+        //     });
+        // });
+    </script>
+</body>
+</html>
