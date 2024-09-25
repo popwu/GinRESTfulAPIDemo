@@ -51,12 +51,30 @@
             </form>
         </div>
     </div>
-    <div class="min-h-screen flex items-center justify-center" id="home" x-show="hasToken" x-cloak>
-        <div class="text-center">
-            <h1 class="text-4xl font-bold text-blue-600 mb-4">Hello</h1>
-            <p class="text-xl text-gray-700">Welcome to our home page!</p>
+    
+      <main class="flex-grow flex" id="home" x-show="hasToken" x-cloak>
+        
+        <aside class="w-64 bg-gray-100 p-4">
+          <nav>
+            <h2 class="text-lg font-semibold mb-4">Menu</h2>
+            <ul class="space-y-2">
+              
+                <li key={index} class="h-4 bg-gray-300 rounded"></li>
+                <li key={index} class="h-4 bg-gray-300 rounded"></li>
+                <li key={index} class="h-4 bg-gray-300 rounded"></li>
+              
+            </ul>
+          </nav>
+        </aside>
+
+        
+        <div class="flex-grow p-8">
+          <div class="bg-white rounded-lg shadow-lg p-6 max-w-3xl mx-auto">
+            <h1 class="text-3xl font-bold text-blue-600 text-center mb-2">Hello</h1>
+            <p class="text-center text-gray-600">Welcome to our home page!</p>
+          </div>
         </div>
-    </div>
+      </main>
 
     <script>
         function loginManager() {
@@ -92,42 +110,6 @@
                 }
             }
         }
-
-        // document.addEventListener('DOMContentLoaded', async () => {
-            // 检查是否已有token
-            // const token = localStorage.getItem('token');
-            // if (token) {
-                // try {
-                    // 验证token是否有效
-                    // const response = await axios.get('/api/status', {
-                    //     headers: { 'Authorization': `Bearer ${token}` }
-                    // });
-                    // if (response.data.status === 'valid') {
-                        // window.location.href = '/home';
-                //         return;
-                //     }
-                // } catch (error) {
-                //     console.error('Token验证失败:', error);
-                // }
-            // }
-
-            // 处理登录表单提交
-        //     document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        //         e.preventDefault();
-        //         const nickname = document.getElementById('nickname').value;
-        //         const password = document.getElementById('password').value;
-
-        //         try {
-        //             const response = await axios.post('/auth/login', { nickname, password });
-        //             const { token } = response.data;
-        //             localStorage.setItem('token', token);
-        //             window.location.href = '/home';
-        //         } catch (error) {
-        //             console.error('登录失败:', error);
-        //             alert('登录失败，请检查您的昵称和密码。');
-        //         }
-        //     });
-        // });
     </script>
 </body>
 </html>

@@ -43,5 +43,4 @@ func main() {
 		return
 	}
 
-	println("Hello, World!")
 }
